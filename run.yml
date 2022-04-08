@@ -1,0 +1,12 @@
+- name: "Configure Homeserver"
+  hosts: "all"
+  
+  vars_files:
+    - "vars/main.yml"
+    - "vars/vault.yml"
+
+  roles:
+    - role: system
+    - role: adguard
+      tags:
+        - adguard

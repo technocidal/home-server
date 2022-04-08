@@ -1,0 +1,13 @@
+---
+container:
+  name: "adguardhome"
+  conf:
+    dir: "/opt/adguardhome/conf"
+  work:
+    dir: "/opt/adguardhome/work"
+image:
+  name: "docker.io/adguard/adguardhome"
+conf:
+  dir: "/home/adguardhome/conf"
+work:
+  dir: "/home/adguardhome/work"

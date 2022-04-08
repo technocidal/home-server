@@ -1,0 +1,95 @@
+---
+- name: Creates AdGuard work directory
+  file:
+    path: "/etc/systemd/resolved.conf.d"
+    state: "directory"
+    recurse: true
+
+- name: Copy modified resolved configuration
+  ansible.builtin.copy:
+    src: "adguardhome.conf"
+    dest: "/etc/systemd/resolved.conf.d/adguardhome.conf"
+
+- name: "Backup resolved config"
+  ansible.builtin.command: "mv /etc/resolv.conf /etc/resolv.conf.backup"
+    
+- name: "Link to AdGuard-friendly config"
+  ansible.builtin.file:
+    src: "/run/systemd/resolve/resolv.conf"
+    dest: "/etc/resolv.conf"
+    state: "link"
+      
+- name: "Reload systemd-resolved"
+  service:
+    name: systemd-resolved
+    state: restarted
+
+- name: "Pull AdGuard Home image"
+  containers.podman.podman_image:
+    name: "{{ image.name }}"
+    
+- name: Creates AdGuard work directory
+  file:
+    path: "{{ work.dir }}"
+    state: "directory"
+    
+- name: Creates AdGuard conf directory
+  file:
+    path: "{{ conf.dir }}"
+    state: "directory"
+    
+- name: Allow AdGuard to listen on tcp port 53
+  community.general.seport:
+    ports: "53"
+    proto: "tcp"
+    setype: "http_port_t"
+    state: "present"
+
+- name: Allow AdGuard to listen on udp port 53
+  community.general.seport:
+    ports: "53"
+    proto: "udp"
+    setype: "http_port_t"
+    state: "present"
+
+- name: Allow AdGuard to listen on tcp port 443 (DNS over HTTPS)
+  community.general.seport:
+    ports: "443"
+    proto: "tcp"
+    setype: "http_port_t"
+    state: "present"
+
+- name: Allow AdGuard to listen on udp port 443 (DNS over HTTPS)
+  community.general.seport:
+    ports: "443"
+    proto: "udp"
+    setype: "http_port_t"
+    state: "present"
+    
+- name: Allow AdGuard to listen on tcp port 3000
+  community.general.seport:
+    ports: "3000"
+    proto: "tcp"
+    setype: "http_port_t"
+    state: "present"
+    
+- name: "Start AdGuard"
+  containers.podman.podman_container:
+    name: "{{ container.name }}"
+    image: "{{ image.name }}"
+    state: "started"
+    expose:
+      - "53/tcp"
+      - "53/udp"
+      - "443/tcp"
+      - "443/udp"
+      - "3000/tcp"
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
+      - "443:443/tcp"
+      - "443:443/udp"
+      - "3000:3000/tcp"
+    volumes:
+      - "{{ conf.dir }}:{{ container.conf.dir }}:Z"
+      - "{{ work.dir }}:{{ container.work.dir }}:Z"
