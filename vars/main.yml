@@ -1,4 +1,7 @@
 username: "technocidal"
+password: "{{ vault_password }}"
 
 hostname: technocidal-0.local
 timezone: "Europe/Amsterdam"
+
+ssh_public_key: "{{ vault_ssh_public_key }}"

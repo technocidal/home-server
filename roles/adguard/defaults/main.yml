@@ -8,6 +8,6 @@ container:
 image:
   name: "docker.io/adguard/adguardhome"
 conf:
-  dir: "/home/adguardhome/conf"
+  dir: "/home/{{ username }}/adguardhome/conf"
 work:
-  dir: "/home/adguardhome/work"
+  dir: "/home/{{ username }}/adguardhome/work"
