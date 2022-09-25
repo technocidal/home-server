@@ -10,3 +10,8 @@
     - role: adguard
       tags:
         - adguard
+        - container
+    - role: jellyfin
+      tags:
+        - jellyfin
+        - container

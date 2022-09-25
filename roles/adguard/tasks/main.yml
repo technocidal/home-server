@@ -93,3 +93,4 @@
     volumes:
       - "{{ conf.dir }}:{{ container.conf.dir }}:Z"
       - "{{ work.dir }}:{{ container.work.dir }}:Z"
+    restart_policy: always

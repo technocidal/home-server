@@ -1,0 +1,13 @@
+---
+container:
+  name: "jellyfin"
+  config:
+    dir: "/config"
+  cache:
+    dir: "/cache"
+image:
+  name: "ghcr.io/linuxserver/jellyfin"
+config:
+  dir: "/home/{{ username }}/jellyfin/config"
+cache:
+  dir: "/home/{{ username }}/jellfin/cache"

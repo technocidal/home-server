@@ -25,3 +25,20 @@ Execute the following command to deploy `run.yml`.
 ```
 ansible-playbook run.yml
 ```
+
+## Vault
+
+Create a new keychain item for vault decryption.
+
+```
+security add-generic-password \                          
+   -a [USER] \
+   -s ansible-vault-password \
+   -w
+```
+
+Edit variables in vault.
+
+```
+ansible-vault edit vars/vault.yml
+```
