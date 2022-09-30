@@ -2,20 +2,15 @@
 - name: "Pull Jellyfin image"
   containers.podman.podman_image:
     name: "{{ image.name }}"
-
+    
 - name: Creates Jellyfin cache directory
   file:
     path: "{{ cache.dir }}"
     state: "directory"
-
+    
 - name: Creates Jellyfin config directory
   file:
     path: "{{ config.dir }}"
-    state: "directory"
-
-- name: Creates Jellyfin media directory
-  file:
-    path: "/home/{{ username }}/External"
     state: "directory"
 
 - name: Allow Jellyfin to listen on tcp port 8096
@@ -24,22 +19,14 @@
     proto: "tcp"
     setype: "http_port_t"
     state: "present"
-
+    
 - name: Mount external SSD
   ansible.posix.mount:
-    path: /home/{{ username }}/External
-    src: LABEL=External
-    fstype: ext4
+    path: /home/{{ username }}/MEDIA
+    src: LABEL=MEDIA
+    fstype: fat32
     state: present
-
-- name: Mount and bind a volume
-  ansible.posix.mount:
-    path: /home/{{ username }}/External
-    src: LABEL=External
-    opts: defaults,nofail
-    state: mounted
-    fstype: ext4
-
+  
 - name: "Start Jellyfin"
   containers.podman.podman_container:
     name: "{{ container.name }}"
@@ -51,9 +38,9 @@
       - "8096/tcp"
     ports:
       - "8096:8096/tcp"
-
+    
     volumes:
       - "{{ config.dir }}:{{ container.config.dir }}:Z"
       - "{{ cache.dir }}:{{ container.cache.dir }}:Z"
-      - "/home/{{ username }}/External/Media:/media:Z"
+      - "/home/{{ username }}/MEDIA/Media:/media:Z"
     restart_policy: always

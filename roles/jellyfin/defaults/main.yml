@@ -10,4 +10,4 @@ image:
 config:
   dir: "/home/{{ username }}/jellyfin/config"
 cache:
-  dir: "/home/{{ username }}/jellfin/cache"
+  dir: "/home/{{ username }}/jellyfin/cache"
