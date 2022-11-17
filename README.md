@@ -71,5 +71,5 @@ semodule -i my-avahidaemon.pp
 sudo systemctl restart avahi-daemon.service
 ```
 
-
-
+HomeKit also seems to have problems picking up new accessories added to Homebridge.
+You can fix this by removing Homebridge from HomeKit via Home.app, [resetting Homebridge](https://github.com/homebridge/homebridge/wiki/Connecting-Homebridge-To-HomeKit#how-to-reset-homebridge), generating a new services definition for avahi and repairing Homebridge.
