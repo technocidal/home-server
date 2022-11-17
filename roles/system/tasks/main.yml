@@ -3,7 +3,7 @@
   ansible.builtin.hostname:
     name: "{{ hostname }}"
   become: true
-
+  
 - name: "Manage cli Packages"
   ansible.builtin.package:
     name:
@@ -14,6 +14,7 @@
       - "curl"
       - "podman"
       - "htop"
+      - "jq"
     state: "present"
   become: true
   
@@ -23,3 +24,4 @@
 - include_tasks: tuned.yml
 - include_tasks: pcp.yml
 - include_tasks: cockpit.yml
+- include_tasks: avahi.yml

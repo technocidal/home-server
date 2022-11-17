@@ -7,6 +7,7 @@
 
   roles:
     - role: system
+      tags: system
     - role: adguard
       tags:
         - adguard
@@ -14,4 +15,8 @@
     - role: jellyfin
       tags:
         - jellyfin
+        - container
+    - role: homebridge
+      tags:
+        - homebridge
         - container

@@ -1,7 +1,8 @@
 # home-server
 
 ## Install Ansible
-```
+
+```bash
 # Create a virtualenv
 $ python3 -m venv ~/.venv-ansible
 
@@ -19,10 +20,17 @@ $ deactivate
 
 ## Usage
 
+Install all 3rd party roles this playbook uses.
+
+```bash
+ansible-galaxy install -r requirements.yml
+```
+
 Create an inventory (`inventory.ini`) to define which machines you're targeting. 
 
 Execute the following command to deploy `run.yml`.
-```
+
+```bash
 ansible-playbook run.yml
 ```
 
@@ -30,7 +38,7 @@ ansible-playbook run.yml
 
 Create a new keychain item for vault decryption.
 
-```
+```bash
 security add-generic-password \                          
    -a [USER] \
    -s ansible-vault-password \
@@ -39,6 +47,29 @@ security add-generic-password \
 
 Edit variables in vault.
 
-```
+```bash
 ansible-vault edit vars/vault.yml
 ```
+
+## Knowledgebase
+
+### Homebridge
+
+This Homebridge setup is quite unusual. I've learned a lot from
+this [blog article](https://www.devwithimagination.com/2020/02/02/running-homebridge-on-docker-without-host-network-mode/).
+Run the `generate-services.sh` on the server to generate a avahi service definition for
+everything that runs inside the homebridge container. SELinux will complain about
+avahi trying to access that the generated file. 
+Run the following commands to fix those permissions.
+
+```bash
+# Generate policy
+ausearch -c 'avahi-daemon' --raw | audit2allow -M my-avahidaemon
+# Apply policy
+semodule -i my-avahidaemon.pp
+# Restart avahi
+sudo systemctl restart avahi-daemon.service
+```
+
+
+

@@ -1,0 +1,45 @@
+---
+- name: Creates Homebridge directory
+  file:
+    path: "{{ volume.dir }}"
+    state: "directory"
+
+- name: Allow Homebridge to listen on tcp port 8581
+  community.general.seport:
+    ports: "8581"
+    proto: "tcp"
+    setype: "http_port_t"
+    state: "present"
+    
+- name: Allow Homebridge to listen on tcp port 51124
+  community.general.seport:
+    ports: "51124"
+    proto: "tcp"
+    setype: "http_port_t"
+    state: "present"
+      
+- name: Allow Homebridge to listen on udp port 51124
+  community.general.seport:
+    ports: "51124"
+    proto: "udp"
+    setype: "http_port_t"
+    state: "present"
+    
+- name: "Start Homebridge"
+  containers.podman.podman_container:
+    name: "{{ container.name }}"
+    image: "{{ image.name }}"
+    state: "started"
+    env:
+      "TZ": "{{ timezone }}"
+    expose:
+      - "8581/tcp"
+      - "51124/tcp"
+      - "51124/udp"
+    ports:
+      - "8581:8581/tcp"
+      - "51124:51124/tcp"
+      - "51124:51124/udp"
+    volumes:
+      - "{{ volume.dir }}:{{ container.volume.dir }}:Z"
+    restart_policy: always
