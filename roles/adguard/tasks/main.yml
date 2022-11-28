@@ -1,4 +1,8 @@
 ---
+- name: "Pull AdGuard image"
+  containers.podman.podman_image:
+    name: "{{ image.name }}"
+
 - name: Creates AdGuard work directory
   file:
     path: "/etc/systemd/resolved.conf.d"
@@ -23,10 +27,6 @@
   service:
     name: systemd-resolved
     state: restarted
-
-- name: "Pull AdGuard Home image"
-  containers.podman.podman_image:
-    name: "{{ image.name }}"
     
 - name: Creates AdGuard work directory
   file:

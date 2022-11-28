@@ -1,4 +1,8 @@
 ---
+- name: "Pull Homebridge image"
+  containers.podman.podman_image:
+    name: "{{ image.name }}"
+  
 - name: Creates Homebridge directory
   file:
     path: "{{ volume.dir }}"
