@@ -37,6 +37,11 @@
   file:
     path: "{{ conf.dir }}"
     state: "directory"
+
+- name: Copy AdGuard configuration
+  ansible.builtin.copy:
+    src: "AdGuardHome.yaml"
+    dest: "{{ conf.dir }}"
     
 - name: Allow AdGuard to listen on tcp port 53
   community.general.seport:
