@@ -6,6 +6,8 @@
       - "cockpit-selinux"
       - "cockpit-sosreport"
       - "cockpit-storaged"
+      - "cockpit-podman"
+      - "cockpit-packagekit"
     state: "present"
   become: true
   
