@@ -6,7 +6,7 @@ container:
   cache:
     dir: "/cache"
 image:
-  name: "ghcr.io/linuxserver/jellyfin"
+  name: "ghcr.io/linuxserver/jellyfin:latest"
 config:
   dir: "/home/{{ username }}/jellyfin/config"
 cache:

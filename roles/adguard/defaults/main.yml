@@ -6,7 +6,7 @@ container:
   work:
     dir: "/opt/adguardhome/work"
 image:
-  name: "docker.io/adguard/adguardhome"
+  name: "docker.io/adguard/adguardhome:latest"
 conf:
   dir: "/home/{{ username }}/adguardhome/conf"
 work:
