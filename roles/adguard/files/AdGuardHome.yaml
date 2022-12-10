@@ -3,7 +3,7 @@ bind_port: 3000
 beta_bind_port: 0
 users:
   - name: root
-    password: $2a$10$U5brejdC5r.6K0q.Tyvww.KFLld1EiUTFi0Y5SD4u1lUfircZiUP2
+    password: {{ password }}
 auth_attempts: 5
 block_auth_min: 15
 http_proxy: ""

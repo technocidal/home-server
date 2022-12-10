@@ -41,7 +41,7 @@ Create a new keychain item for vault decryption.
 ```bash
 security add-generic-password \                          
    -a [USER] \
-   -s ansible-vault-password \
+   -s home-server-vault \
    -w
 ```
 

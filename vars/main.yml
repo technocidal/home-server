@@ -3,5 +3,3 @@ password: "{{ vault_password }}"
 
 hostname: technocidal-0.local
 timezone: "Etc/UTC"
-
-ssh_public_key: "{{ vault_ssh_public_key }}"
