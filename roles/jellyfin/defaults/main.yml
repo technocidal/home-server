@@ -1,13 +1,12 @@
 ---
 container:
   name: "jellyfin"
-  config:
-    dir: "/config"
-  cache:
-    dir: "/cache"
-image:
-  name: "ghcr.io/linuxserver/jellyfin:latest"
-config:
-  dir: "/home/{{ username }}/jellyfin/config"
-cache:
-  dir: "/home/{{ username }}/jellyfin/cache"
+  image: "ghcr.io/linuxserver/jellyfin:latest"
+  volumes:
+    config: "/config"
+    cache: "/cache"
+    media: "/media"
+volumes:
+  config: "/home/{{ username }}/jellyfin/config"
+  cache: "/home/{{ username }}/jellyfin/cache"
+  media: "/home/{{ username }}/External/Media"

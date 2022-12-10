@@ -1,22 +1,37 @@
 ---
 - name: "Pull Jellyfin image"
   containers.podman.podman_image:
-    name: "{{ image.name }}"
+    name: "{{ container.image }}"
 
 - name: Creates Jellyfin cache directory
   file:
-    path: "{{ cache.dir }}"
+    path: "{{ volumes.cache }}"
     state: "directory"
 
 - name: Creates Jellyfin config directory
   file:
-    path: "{{ config.dir }}"
+    path: "{{ volumes.config }}"
     state: "directory"
 
 - name: Creates Jellyfin media directory
   file:
-    path: "/home/{{ username }}/External"
+    path: "{{ ssd_external_mount_point }}"
     state: "directory"
+
+- name: Mount external SSD
+  ansible.posix.mount:
+    path: "{{ ssd_external_mount_point }}"
+    src: LABEL=External
+    fstype: ext4
+    state: present
+
+- name: Mount and bind a volume
+  ansible.posix.mount:
+    path: "{{ ssd_external_mount_point }}"
+    src: LABEL=External
+    opts: defaults,nofail
+    state: mounted
+    fstype: ext4    
 
 - name: Allow Jellyfin to listen on tcp port 8096
   community.general.seport:
@@ -25,25 +40,10 @@
     setype: "http_port_t"
     state: "present"
 
-- name: Mount external SSD
-  ansible.posix.mount:
-    path: /home/{{ username }}/External
-    src: LABEL=External
-    fstype: ext4
-    state: present
-
-- name: Mount and bind a volume
-  ansible.posix.mount:
-    path: /home/{{ username }}/External
-    src: LABEL=External
-    opts: defaults,nofail
-    state: mounted
-    fstype: ext4
-
 - name: "Start Jellyfin"
   containers.podman.podman_container:
     name: "{{ container.name }}"
-    image: "{{ image.name }}"
+    image: "{{ container.image }}"
     state: "started"
     env:
       "TZ": "{{ timezone }}"
@@ -51,9 +51,8 @@
       - "8096/tcp"
     ports:
       - "8096:8096/tcp"
-
     volumes:
-      - "{{ config.dir }}:{{ container.config.dir }}:Z"
-      - "{{ cache.dir }}:{{ container.cache.dir }}:Z"
-      - "/home/{{ username }}/External/Media:/media:Z"
+      - "{{ volumes.config }}:{{ container.volumes.config }}:Z"
+      - "{{ volumes.cache }}:{{ container.volumes.cache }}:Z"
+      - "{{ volumes.media }}:{{ container.volumes.media }}:Z"
     restart_policy: always

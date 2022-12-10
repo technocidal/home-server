@@ -1,13 +1,10 @@
 ---
 container:
   name: "adguardhome"
-  conf:
-    dir: "/opt/adguardhome/conf"
-  work:
-    dir: "/opt/adguardhome/work"
-image:
-  name: "docker.io/adguard/adguardhome:latest"
-conf:
-  dir: "/home/{{ username }}/adguardhome/conf"
-work:
-  dir: "/home/{{ username }}/adguardhome/work"
+  image: "docker.io/adguard/adguardhome:latest"
+  volumes:
+    conf: "/opt/adguardhome/conf"
+    work: "/opt/adguardhome/work"
+volumes:
+  conf: "/home/{{ username }}/adguardhome/conf"
+  work: "/home/{{ username }}/adguardhome/work"

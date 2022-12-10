@@ -3,3 +3,7 @@ password: "{{ vault_password }}"
 
 hostname: technocidal-0.local
 timezone: "Etc/UTC"
+
+# MARK: Volumes
+
+ssd_external_mount_point: "/home/{{ username }}/External"

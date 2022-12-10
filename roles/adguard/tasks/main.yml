@@ -1,7 +1,7 @@
 ---
 - name: "Pull AdGuard image"
   containers.podman.podman_image:
-    name: "{{ image.name }}"
+    name: "{{ container.image }}"
 
 - name: Creates AdGuard work directory
   file:
@@ -30,18 +30,18 @@
     
 - name: Creates AdGuard work directory
   file:
-    path: "{{ work.dir }}"
+    path: "{{ volumes.work }}"
     state: "directory"
     
 - name: Creates AdGuard conf directory
   file:
-    path: "{{ conf.dir }}"
+    path: "{{ volumes.conf }}"
     state: "directory"
 
 - name: Copy AdGuard configuration
   ansible.builtin.copy:
     src: "AdGuardHome.yaml"
-    dest: "{{ conf.dir }}"
+    dest: "{{ volumes.conf }}"
     
 - name: Allow AdGuard to listen on tcp port 53
   community.general.seport:
@@ -81,7 +81,7 @@
 - name: "Start AdGuard"
   containers.podman.podman_container:
     name: "{{ container.name }}"
-    image: "{{ image.name }}"
+    image: "{{ container.image }}"
     state: "started"
     expose:
       - "53/tcp"
@@ -96,6 +96,6 @@
       - "443:443/udp"
       - "3000:3000/tcp"
     volumes:
-      - "{{ conf.dir }}:{{ container.conf.dir }}:Z"
-      - "{{ work.dir }}:{{ container.work.dir }}:Z"
+      - "{{ volumes.conf }}:{{ container.volumes.conf }}:Z"
+      - "{{ volumes.work }}:{{ container.volumes.work }}:Z"
     restart_policy: always

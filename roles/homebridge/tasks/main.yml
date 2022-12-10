@@ -1,11 +1,11 @@
 ---
 - name: "Pull Homebridge image"
   containers.podman.podman_image:
-    name: "{{ image.name }}"
+    name: "{{ container.image }}"
   
 - name: Creates Homebridge directory
   file:
-    path: "{{ volume.dir }}"
+    path: "{{ volumes.homebridge }}"
     state: "directory"
 
 - name: Allow Homebridge to listen on tcp port 8581
@@ -32,7 +32,7 @@
 - name: "Start Homebridge"
   containers.podman.podman_container:
     name: "{{ container.name }}"
-    image: "{{ image.name }}"
+    image: "{{ container.image }}"
     state: "started"
     env:
       "TZ": "{{ timezone }}"
@@ -45,5 +45,5 @@
       - "51124:51124/tcp"
       - "51124:51124/udp"
     volumes:
-      - "{{ volume.dir }}:{{ container.volume.dir }}:Z"
+      - "{{ volumes.homebridge }}:{{ container.volumes.homebridge }}:Z"
     restart_policy: always

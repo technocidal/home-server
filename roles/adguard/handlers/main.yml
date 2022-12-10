@@ -1,5 +1,5 @@
 ---
 - name: "Restart AdGuard"
   containers.podman.podman_container:
-    name: "{{ adguard.container.name }}"
+    name: "{{ container.name }}"
     restart: true

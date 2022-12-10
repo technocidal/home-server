@@ -1,9 +1,8 @@
 ---
 container:
   name: "homebridge"
-  volume:
-    dir: "/homebridge"
-image:
-  name: "docker.io/oznu/homebridge:no-avahi"
-volume:
-  dir: "/home/{{ username }}/homebridge"
+  image: "docker.io/oznu/homebridge:no-avahi"
+  volumes:
+    homebridge: "/homebridge"
+volumes:
+  homebridge: "/home/{{ username }}/homebridge"
