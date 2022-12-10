@@ -1,0 +1,42 @@
+---
+- name: "Pull soft-serve image"
+  containers.podman.podman_image:
+    name: "{{ container.image }}"
+
+- name: Creates SSD Mount Point
+  file:
+    path: "{{ ssd_external_mount_point }}"
+    state: "directory"
+
+- name: Mount external SSD
+  ansible.posix.mount:
+    path: "{{ ssd_external_mount_point }}"
+    src: LABEL=External
+    fstype: ext4
+    state: present
+
+- name: Creates directory to store repositories
+  file:
+    path: "{{ volumes.repositories }}"
+    state: "directory"
+    recurse: true
+    
+- name: Allow soft-serve to listen on tcp port 23231
+  community.general.seport:
+    ports: "23231"
+    proto: "tcp"
+    setype: "http_port_t"
+    state: "present"
+    
+- name: "Start soft-serve"
+  containers.podman.podman_container:
+    name: "{{ container.name }}"
+    image: "{{ container.image }}"
+    state: "started"
+    expose:
+      - "23231/tcp"
+    ports:
+      - "23231:23231/tcp"
+    volumes:
+      - "{{ volumes.repositories }}:{{ container.volumes.repositories }}:Z"
+    restart_policy: always

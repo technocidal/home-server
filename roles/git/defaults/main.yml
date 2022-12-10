@@ -1,0 +1,8 @@
+---
+container:
+  name: "softserve"
+  image: "docker.io/charmcli/soft-serve:latest"
+  volumes:
+    repositories: "/soft-serve"
+volumes:
+  repositories: "/home/{{ username }}/External/soft-serve"

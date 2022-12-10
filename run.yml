@@ -20,3 +20,7 @@
       tags:
         - homebridge
         - container
+    - role: git
+      tags:
+        - git
+        - container
