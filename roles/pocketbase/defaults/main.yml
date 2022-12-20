@@ -1,0 +1,8 @@
+---
+container:
+  name: "pocketbase"
+  image: "pocketbase:latest"
+  volumes:
+    data: "/pb/pb_data"
+volumes:
+  data: "/home/{{ username }}/External/pb_data"

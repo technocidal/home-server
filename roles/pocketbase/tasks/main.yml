@@ -1,0 +1,55 @@
+---
+- name: Creates SSD Mount Point
+  file:
+    path: "{{ ssd_external_mount_point }}"
+    state: "directory"
+
+- name: Mount external SSD
+  ansible.posix.mount:
+    path: "{{ ssd_external_mount_point }}"
+    src: LABEL=External
+    fstype: ext4
+    state: present
+
+- name: Creates directory to store repositories
+  file:
+    path: "{{ volumes.data }}"
+    state: "directory"
+    recurse: true
+    
+- name: Creates directory to store build artifacts
+  file:
+    path: "/tmp/podman/{{ container.name }}"
+    state: "directory"
+    recurse: true
+    
+- name: Copy Dockerfile
+  ansible.builtin.copy:
+    src: "Dockerfile"
+    dest: "/tmp/podman/{{ container.name }}"
+
+- name: Allow soft-serve to listen on tcp port 23231
+  community.general.seport:
+    ports: "12000"
+    proto: "tcp"
+    setype: "http_port_t"
+    state: "present"
+
+- name: Build Pocketbase image
+  containers.podman.podman_image:
+    name: "{{ container.name }}"
+    path: "/tmp/podman/{{ container.name }}"
+    force: true
+
+- name: "Start Pocketbase"
+  containers.podman.podman_container:
+    name: "{{ container.name }}"
+    image: pocketbase:latest
+    state: "started"
+    expose:
+      - "12000/tcp"
+    ports:
+      - "12000:12000/tcp"
+    volumes:
+      - "{{ volumes.data }}:{{ container.volumes.data }}:Z"
+    restart_policy: always

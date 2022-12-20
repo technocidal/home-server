@@ -24,3 +24,7 @@
       tags:
         - git
         - container
+    - role: pocketbase
+      tags:
+        - pocketbase
+        - container
