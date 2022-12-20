@@ -15,6 +15,7 @@
       - "podman"
       - "htop"
       - "jq"
+      - "micro"
     state: "present"
   become: true
   
