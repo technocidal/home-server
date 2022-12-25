@@ -1,0 +1,9 @@
+---
+mqtt:
+  container:
+    name: "mqtt"
+    image: "docker.io/emqx/emqx:latest"
+proxy:
+  container:
+    name: "emqx-authentication-proxy"
+    image: "ghcr.io/technocidal/emqx-authentication-proxy:latest"

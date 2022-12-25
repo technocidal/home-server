@@ -28,3 +28,7 @@
       tags:
         - pocketbase
         - container
+    - role: mqtt
+      tags:
+        - mqtt
+        - container
