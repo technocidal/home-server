@@ -1,9 +1,40 @@
 ---
-mqtt:
-  container:
+containers:
+  mqtt:
     name: "mqtt"
     image: "docker.io/emqx/emqx:latest"
-proxy:
-  container:
+  proxy:
     name: "emqx-authentication-proxy"
     image: "ghcr.io/technocidal/emqx-authentication-proxy:latest"
+network:
+  ports:
+    mqtt_tcp:
+      port: 1883
+      proto: "tcp"
+      expose: "1883/tcp"
+      bind: "1883:1883/tcp"
+    mqtt_ssl_tcp:
+      port: 8883
+      proto: "tcp"
+      expose: "8883/tcp"
+      bind: "8883:8883/tcp"
+    websocket_tcp:
+      port: 8083
+      proto: "tcp"
+      expose: "8083/tcp"
+      bind: "8083:8083/tcp"
+    websocket_ssl_tcp:
+      port: 8084
+      proto: "tcp"
+      expose: "8084/tcp"
+      bind: "8084:8084/tcp"
+    webui:
+      port: 18083
+      proto: "tcp"
+      expose: "18083/tcp"
+      bind: "18083:18083/tcp"
+    proxy:
+      port: 18084
+      proto: "tcp"
+      expose: "18084/tcp"
+      bind: "18084:18084/tcp"

@@ -1,84 +1,50 @@
 ---
 - name: "Pull EMQX image"
   containers.podman.podman_image:
-    name: "{{ mqtt.container.image }}"
+    name: "{{ containers.mqtt.image }}"
 
 - name: "Pull Proxy image"
   containers.podman.podman_image:
-    name: "{{ proxy.container.image }}"   
+    name: "{{ containers.proxy.image }}"   
 
-- name: Allow EMQX to listen on tcp port 8096
+- name: Modify SELinux to allow necessary ports for Homebridge
   community.general.seport:
-    ports: "1883"
-    proto: "tcp"
+    ports: "{{ item.value.port }}"
+    proto: "{{ item.value.proto }}"
     setype: "http_port_t"
     state: "present"
-    
-- name: Allow EMQX to listen on tcp port 8096
-  community.general.seport:
-    ports: "8083"
-    proto: "tcp"
-    setype: "http_port_t"
-    state: "present"
-
-- name: Allow EMQX to listen on tcp port 8096
-  community.general.seport:
-    ports: "8084"
-    proto: "tcp"
-    setype: "http_port_t"
-    state: "present"
-    
-- name: Allow EMQX to listen on tcp port 8096
-  community.general.seport:
-    ports: "8883"
-    proto: "tcp"
-    setype: "http_port_t"
-    state: "present"
-
-- name: Allow EMQX to listen on tcp port 8096
-  community.general.seport:
-    ports: "18083"
-    proto: "tcp"
-    setype: "http_port_t"
-    state: "present"
+  loop: "{{ network.ports|dict2items }}"
 
 - name: "Start EMQX"
   containers.podman.podman_container:
-    name: "{{ mqtt.container.name }}"
-    image: "{{ mqtt.container.image }}"
+    name: "{{ containers.mqtt.name }}"
+    image: "{{ containers.mqtt.image }}"
     state: "started"
     env:
       "TZ": "{{ timezone }}"
     expose:
-      - "1883/tcp"
-      - "8083/tcp"
-      - "8084/tcp"
-      - "8883/tcp"
-      - "18083/tcp"
+      - "{{ network.ports.mqtt_tcp.expose }}"
+      - "{{ network.ports.mqtt_ssl_tcp.expose }}"
+      - "{{ network.ports.websocket_tcp.expose }}"
+      - "{{ network.ports.websocket_ssl_tcp.expose }}"
+      - "{{ network.ports.webui.expose }}"
     ports:
-      - "1883:1883/tcp"
-      - "8083:8083/tcp"
-      - "8084:8084/tcp"
-      - "8883:8883/tcp"
-      - "18083:18083/tcp"
+      - "{{ network.ports.mqtt_tcp.bind }}"
+      - "{{ network.ports.mqtt_ssl_tcp.bind }}"
+      - "{{ network.ports.websocket_tcp.bind }}"
+      - "{{ network.ports.websocket_ssl_tcp.bind }}"
+      - "{{ network.ports.webui.bind }}"
     restart_policy: always
-
-- name: Allow the proxy to listen on tcp port 8080
-  community.general.seport:
-    ports: "8080"
-    proto: "tcp"
-    setype: "http_port_t"
-    state: "present"
 
 - name: "Start Proxy"
   containers.podman.podman_container:
-    name: "{{ proxy.container.name }}"
-    image: "{{ proxy.container.image }}"
+    name: "{{ containers.proxy.name }}"
+    image: "{{ containers.proxy.image }}"
     state: "started"
     env:
       "TZ": "{{ timezone }}"
     expose:
-      - "8080/tcp"
+      - "{{ network.ports.proxy.expose }}"
     ports:
-      - "8080:8080/tcp"
+      - "{{ network.ports.proxy.bind }}"
     restart_policy: always
