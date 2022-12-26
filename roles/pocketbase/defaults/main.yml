@@ -4,5 +4,13 @@ container:
   image: "pocketbase:latest"
   volumes:
     data: "/pb/pb_data"
-volumes:
-  data: "/home/{{ username }}/External/pb_data"
+host:    
+  volumes:
+    data: "/home/{{ username }}/External/pb_data"
+network:
+  ports:
+    main: 
+      port: 3001
+      proto: "tcp"
+      expose: "3001/tcp"
+      bind: "3001:3001/tcp"

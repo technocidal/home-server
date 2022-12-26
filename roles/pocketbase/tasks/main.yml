@@ -11,9 +11,9 @@
     fstype: ext4
     state: present
 
-- name: Creates directory to store repositories
+- name: Creates directory to store database
   file:
-    path: "{{ volumes.data }}"
+    path: "{{ host.volumes.data }}"
     state: "directory"
     recurse: true
     
@@ -24,13 +24,13 @@
     recurse: true
     
 - name: Copy Dockerfile
-  ansible.builtin.copy:
-    src: "Dockerfile"
-    dest: "/tmp/podman/{{ container.name }}"
+  ansible.builtin.template:
+    src: "Dockerfile.j2"
+    dest: "/tmp/podman/{{ container.name }}/Dockerfile"
 
-- name: Allow soft-serve to listen on tcp port 23231
+- name: "Allow pocketbase to listen on tcp port {{ network.ports.main.expose }}"
   community.general.seport:
-    ports: "12000"
+    ports: "{{ network.ports.main.port }}"
     proto: "tcp"
     setype: "http_port_t"
     state: "present"
@@ -47,9 +47,9 @@
     image: pocketbase:latest
     state: "started"
     expose:
-      - "12000/tcp"
+      - "{{ network.ports.main.expose }}"
     ports:
-      - "12000:12000/tcp"
+      - "{{ network.ports.main.bind }}"
     volumes:
-      - "{{ volumes.data }}:{{ container.volumes.data }}:Z"
+      - "{{ host.volumes.data }}:{{ container.volumes.data }}:Z"
     restart_policy: always
