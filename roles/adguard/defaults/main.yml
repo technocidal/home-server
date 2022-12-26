@@ -3,8 +3,36 @@ container:
   name: "adguardhome"
   image: "docker.io/adguard/adguardhome:latest"
   volumes:
-    conf: "/opt/adguardhome/conf"
+    config: "/opt/adguardhome/conf"
     work: "/opt/adguardhome/work"
-volumes:
-  conf: "/home/{{ username }}/adguardhome/conf"
-  work: "/home/{{ username }}/adguardhome/work"
+host:
+  volumes:
+    config: "/home/{{ username }}/adguardhome/conf"
+    work: "/home/{{ username }}/adguardhome/work"
+network:
+  ports:
+    dns_tcp:
+      port: 53
+      proto: "tcp"
+      expose: "53/tcp"
+      bind: "53:53/tcp"
+    dns_udp:
+      port: 53
+      proto: "udp"
+      expose: "53/udp"
+      bind: "53:53/udp"
+    dns_https_tcp:
+      port: 443
+      proto: "tcp"
+      expose: "443/tcp"
+      bind: "443:443/tcp"
+    dns_https_udp:
+      port: 443
+      proto: "udp"
+      expose: "443/udp"
+      bind: "443:443/udp"
+    webui:
+      port: 3000
+      proto: "tcp"
+      expose: "3000/tcp"
+      bind: "3000:3000/tcp"
