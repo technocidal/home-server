@@ -5,29 +5,16 @@
   
 - name: Creates Homebridge directory
   file:
-    path: "{{ volumes.homebridge }}"
+    path: "{{ host.volumes.homebridge }}"
     state: "directory"
 
-- name: Allow Homebridge to listen on tcp port 8581
+- name: Modify SELinux to allow necessary ports for Homebridge
   community.general.seport:
-    ports: "8581"
-    proto: "tcp"
+    ports: "{{ item.value.port }}"
+    proto: "{{ item.value.proto }}"
     setype: "http_port_t"
     state: "present"
-    
-- name: Allow Homebridge to listen on tcp port 51124
-  community.general.seport:
-    ports: "51124"
-    proto: "tcp"
-    setype: "http_port_t"
-    state: "present"
-      
-- name: Allow Homebridge to listen on udp port 51124
-  community.general.seport:
-    ports: "51124"
-    proto: "udp"
-    setype: "http_port_t"
-    state: "present"
+  loop: "{{ network.ports|dict2items }}"
     
 - name: "Start Homebridge"
   containers.podman.podman_container:
@@ -37,13 +24,13 @@
     env:
       "TZ": "{{ timezone }}"
     expose:
-      - "8581/tcp"
-      - "51124/tcp"
-      - "51124/udp"
+      - "{{ network.ports.homekit_tcp.expose }}"
+      - "{{ network.ports.homekit_udp.expose }}"
+      - "{{ network.ports.webui.expose }}"
     ports:
-      - "8581:8581/tcp"
-      - "51124:51124/tcp"
-      - "51124:51124/udp"
+      - "{{ network.ports.homekit_tcp.bind }}"
+      - "{{ network.ports.homekit_udp.bind }}"
+      - "{{ network.ports.webui.bind }}"
     volumes:
-      - "{{ volumes.homebridge }}:{{ container.volumes.homebridge }}:Z"
+      - "{{ host.volumes.homebridge }}:{{ container.volumes.homebridge }}:Z"
     restart_policy: always

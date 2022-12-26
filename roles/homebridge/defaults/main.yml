@@ -4,5 +4,23 @@ container:
   image: "docker.io/oznu/homebridge:no-avahi"
   volumes:
     homebridge: "/homebridge"
-volumes:
-  homebridge: "/home/{{ username }}/homebridge"
+host:
+  volumes:
+    homebridge: "/home/{{ username }}/homebridge"
+network:
+  ports:
+    homekit_tcp:
+      port: 51124
+      proto: "tcp"
+      expose: "51124/tcp"
+      bind: "51124:51124/tcp"
+    homekit_udp:
+      port: 51124
+      proto: "udp"
+      expose: "51124/udp"
+      bind: "51124:51124/udp"
+    webui:
+      port: 8581
+      proto: "tcp"
+      expose: "8581/tcp"
+      bind: "8581:8581/tcp"
