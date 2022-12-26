@@ -5,12 +5,12 @@
 
 - name: Creates Jellyfin cache directory
   file:
-    path: "{{ volumes.cache }}"
+    path: "{{ host.volumes.cache }}"
     state: "directory"
 
 - name: Creates Jellyfin config directory
   file:
-    path: "{{ volumes.config }}"
+    path: "{{ host.volumes.config }}"
     state: "directory"
 
 - name: Creates Jellyfin media directory
@@ -35,8 +35,8 @@
 
 - name: Allow Jellyfin to listen on tcp port 8096
   community.general.seport:
-    ports: "8096"
-    proto: "tcp"
+    ports: "{{ network.ports.main.port }}"
+    proto: "{{ network.ports.main.proto }}"
     setype: "http_port_t"
     state: "present"
 
@@ -48,11 +48,11 @@
     env:
       "TZ": "{{ timezone }}"
     expose:
-      - "8096/tcp"
+      - "{{ network.ports.main.expose }}"
     ports:
-      - "8096:8096/tcp"
+      - "{{ network.ports.main.bind }}"
     volumes:
-      - "{{ volumes.config }}:{{ container.volumes.config }}:Z"
-      - "{{ volumes.cache }}:{{ container.volumes.cache }}:Z"
-      - "{{ volumes.media }}:{{ container.volumes.media }}:Z"
+      - "{{ host.volumes.config }}:{{ container.volumes.config }}:Z"
+      - "{{ host.volumes.cache }}:{{ container.volumes.cache }}:Z"
+      - "{{ host.volumes.media }}:{{ container.volumes.media }}:Z"
     restart_policy: always

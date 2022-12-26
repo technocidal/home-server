@@ -6,7 +6,15 @@ container:
     config: "/config"
     cache: "/cache"
     media: "/media"
-volumes:
-  config: "/home/{{ username }}/jellyfin/config"
-  cache: "/home/{{ username }}/jellyfin/cache"
-  media: "/home/{{ username }}/External/Media"
+host:
+  volumes:
+    config: "/home/{{ username }}/jellyfin/config"
+    cache: "/home/{{ username }}/jellyfin/cache"
+    media: "/home/{{ username }}/External/Media"
+network:
+  ports:
+    main:
+      port: 8096
+      proto: "tcp"
+      expose: "8096/tcp"
+      bind: "8096:8096/tcp"
