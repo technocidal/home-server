@@ -5,7 +5,7 @@ containers:
     image: "docker.io/emqx/emqx:latest"
   proxy:
     name: "emqx-authentication-proxy"
-    image: "ghcr.io/technocidal/emqx-authentication-proxy:latest"
+    image: "ghcr.io/technocidal/emqx-authentication-proxy:main"
 network:
   ports:
     mqtt_tcp:
