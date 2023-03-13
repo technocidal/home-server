@@ -17,14 +17,14 @@
 
 - name: Creates directory to store repositories
   file:
-    path: "{{ volumes.repositories }}"
+    path: "{{ host.volumes.repositories }}"
     state: "directory"
     recurse: true
     
-- name: Allow soft-serve to listen on tcp port 23231
+- name: Allow soft-serve to listen on tcp port 18085
   community.general.seport:
-    ports: "23231"
-    proto: "tcp"
+    ports: "{{ network.ports.ssh.port }}"
+    proto: "{{ network.ports.ssh.proto }}"
     setype: "http_port_t"
     state: "present"
     
@@ -33,10 +33,13 @@
     name: "{{ container.name }}"
     image: "{{ container.image }}"
     state: "started"
+    env:
+      SOFT_SERVE_PORT: "{{ network.ports.ssh.port }}"
+      # SOFT_SERVE_INITIAL_ADMIN_KEY: "{{ ssh_public_key }}"
     expose:
-      - "23231/tcp"
+      - "{{ network.ports.ssh.expose }}"
     ports:
-      - "23231:23231/tcp"
+      - "{{ network.ports.ssh.bind }}"
     volumes:
-      - "{{ volumes.repositories }}:{{ container.volumes.repositories }}:Z"
+      - "{{ host.volumes.repositories }}:{{ container.volumes.repositories }}:Z"
     restart_policy: always

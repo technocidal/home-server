@@ -4,5 +4,14 @@ container:
   image: "docker.io/charmcli/soft-serve:latest"
   volumes:
     repositories: "/soft-serve"
-volumes:
-  repositories: "/home/{{ username }}/External/soft-serve"
+host:
+  volumes:
+    repositories: "/home/{{ username }}/External/soft-serve"
+network:
+  ports:
+    ssh:
+      port: 18085 
+      proto: "tcp"
+      expose: "18085/tcp"
+      bind: "18085:18085/tcp"
+  

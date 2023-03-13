@@ -16,6 +16,7 @@
       - "htop"
       - "jq"
       - "micro"
+      - "git"
     state: "present"
   become: true
   
