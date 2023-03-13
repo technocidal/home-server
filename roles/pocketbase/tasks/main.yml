@@ -45,6 +45,7 @@
   containers.podman.podman_container:
     name: "{{ container.name }}"
     image: pocketbase:latest
+    recreate: true
     state: "started"
     expose:
       - "{{ network.ports.main.expose }}"
