@@ -45,6 +45,7 @@
     name: "{{ container.name }}"
     image: "{{ container.image }}"
     state: "started"
+    recreate: true
     env:
       "TZ": "{{ timezone }}"
     expose:
