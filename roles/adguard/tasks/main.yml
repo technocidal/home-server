@@ -37,11 +37,11 @@
   file:
     path: "{{ host.volumes.config }}"
     state: "directory"
-
-- name: Copy AdGuard configuration
-  ansible.builtin.copy:
-    src: "AdGuardHome.yaml"
-    dest: "{{ host.volumes.config }}"
+    
+- name: Copy AdGuard Config
+  ansible.builtin.template:
+    src: "AdGuardHome.yaml.j2"
+    dest: "{{ host.volumes.config }}/AdGuardHome.yaml"    
 
 - name: Modify SELinux to allow necessary ports for AdGuard
   community.general.seport:
@@ -56,6 +56,7 @@
     name: "{{ container.name }}"
     image: "{{ container.image }}"
     state: "started"
+    recreate: true
     expose:
       - "{{ network.ports.dns_tcp.expose }}"
       - "{{ network.ports.dns_udp.expose }}"

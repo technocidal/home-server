@@ -1,5 +1,6 @@
 username: "root"
 password: "{{ vault_password }}"
+ssh_public_key: "{{ vault_ssh_public_key }}"
 
 hostname: technocidal-0.local
 timezone: "Etc/UTC"
@@ -7,3 +8,12 @@ timezone: "Etc/UTC"
 # MARK: Volumes
 
 ssd_external_mount_point: "/home/{{ username }}/External"
+
+# MARK: AdGuard
+
+adguard_password_hash: "{{ vault_adguard_password_hash }}"
+
+# MARK: EMQX
+
+mqtt_username: "{{ vault_mqtt_username }}" # TODO: Use in new configuration template for Homebridge, EMQX und Pocketbase
+mqtt_password: "{{ vault_mqtt_password }}" # TODO: Use in new configuration template for Homebridge, EMQX und Pocketbase
