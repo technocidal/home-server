@@ -3,9 +3,9 @@
   containers.podman.podman_image:
     name: "{{ containers.mqtt.image }}"
 
-# - name: "Pull Proxy image"
-#   containers.podman.podman_image:
-#     name: "{{ containers.proxy.image }}"   
+- name: "Pull Proxy image"
+  containers.podman.podman_image:
+    name: "{{ containers.proxy.image }}"   
 
 - name: Modify SELinux to allow necessary ports for Homebridge
   community.general.seport:
@@ -37,15 +37,15 @@
       - "{{ network.ports.webui.bind }}"
     restart_policy: always
 
-# - name: "Start Proxy"
-#   containers.podman.podman_container:
-#     name: "{{ containers.proxy.name }}"
-#     image: "{{ containers.proxy.image }}"
-#     state: "started"
-#     env:
-#       "TZ": "{{ timezone }}"
-#     expose:
-#       - "{{ network.ports.proxy.expose }}"
-#     ports:
-#       - "{{ network.ports.proxy.bind }}"
-#     restart_policy: always
+- name: "Start Proxy"
+  containers.podman.podman_container:
+    name: "{{ containers.proxy.name }}"
+    image: "{{ containers.proxy.image }}"
+    state: "started"
+    env:
+      "TZ": "{{ timezone }}"
+    expose:
+      - "{{ network.ports.proxy.expose }}"
+    ports:
+      - "{{ network.ports.proxy.bind }}"
+    restart_policy: always
