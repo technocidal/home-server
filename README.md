@@ -4,10 +4,10 @@
 
 ```bash
 # Create a virtualenv
-$ python3 -m venv ~/.venv-ansible
+$ python3 -m venv ~/.venv/home-server
 
 # Activate the virtualenv
-$ source ~/.venv-ansible/bin/activate
+$ source ~/.venv/home-server/bin/activate
 
 # Install Ansible
 $ pip install ansible
