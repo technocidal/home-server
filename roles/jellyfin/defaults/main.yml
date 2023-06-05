@@ -8,8 +8,8 @@ container:
     media: "/media"
 host:
   volumes:
-    config: "/home/{{ username }}/jellyfin/config"
-    cache: "/home/{{ username }}/jellyfin/cache"
+    config: "/home/{{ username }}/External/jellyfin/config"
+    cache: "/home/{{ username }}/External/jellyfin/cache"
     media: "/home/{{ username }}/External/Media"
 network:
   ports:
