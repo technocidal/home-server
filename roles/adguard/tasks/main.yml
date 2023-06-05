@@ -16,32 +16,32 @@
 
 - name: "Backup resolved config"
   ansible.builtin.command: "mv /etc/resolv.conf /etc/resolv.conf.backup"
-    
+
 - name: "Link to AdGuard-friendly config"
   ansible.builtin.file:
     src: "/run/systemd/resolve/resolv.conf"
     dest: "/etc/resolv.conf"
     state: "link"
-      
+
 - name: "Reload systemd-resolved"
   service:
     name: systemd-resolved
     state: restarted
-    
+
 - name: Creates AdGuard work directory
   file:
     path: "{{ host.volumes.work }}"
     state: "directory"
-    
+
 - name: Creates AdGuard conf directory
   file:
     path: "{{ host.volumes.config }}"
     state: "directory"
-    
+
 - name: Copy AdGuard Config
   ansible.builtin.template:
     src: "AdGuardHome.yaml.j2"
-    dest: "{{ host.volumes.config }}/AdGuardHome.yaml"    
+    dest: "{{ host.volumes.config }}/AdGuardHome.yaml"
 
 - name: Modify SELinux to allow necessary ports for AdGuard
   community.general.seport:

@@ -7,8 +7,8 @@ container:
     work: "/opt/adguardhome/work"
 host:
   volumes:
-    config: "/home/{{ username }}/adguardhome/conf"
-    work: "/home/{{ username }}/adguardhome/work"
+    config: "/home/{{ username }}/External/adguardhome/conf"
+    work: "/home/{{ username }}/External/adguardhome/work"
 network:
   ports:
     dns_tcp:
