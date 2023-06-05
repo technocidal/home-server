@@ -3,9 +3,19 @@ containers:
   mqtt:
     name: "mqtt"
     image: "docker.io/emqx/emqx:latest"
+    volumes:
+      data: "/opt/emqx/data"
+      etc: "/opt/emqx/etc"
+      log: "/opt/emqx/log"
   proxy:
     name: "emqx-authentication-proxy"
     image: "ghcr.io/technocidal/emqx-authentication-proxy:main"
+host:
+  mqtt:
+    volumes:
+      data: "/home/{{ username }}/External/emqx/data"
+      etc: "/home/{{ username }}/External/emqx/etc"
+      log: "/home/{{ username }}/External/emqx/log"
 network:
   ports:
     mqtt_tcp:

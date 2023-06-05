@@ -5,7 +5,22 @@
 
 - name: "Pull Proxy image"
   containers.podman.podman_image:
-    name: "{{ containers.proxy.image }}"   
+    name: "{{ containers.proxy.image }}"
+
+- name: Create data directory
+  file:
+    path: "{{ host.mqtt.volumes.data }}"
+    state: "directory"
+
+- name: Create etc directoy
+  file:
+    path: "{{ host.mqtt.volumes.etc }}"
+    state: "directory"
+
+- name: Create log directory
+  file:
+    path: "{{ host.mqtt.volumes.log }}"
+    state: "directory"
 
 - name: Modify SELinux to allow necessary ports for Homebridge
   community.general.seport:
@@ -23,6 +38,8 @@
     recreate: true
     env:
       "TZ": "{{ timezone }}"
+      "EMQX_NAME": "lab-emqx"
+      "EMQX_HOST": "127.0.0.1"
     expose:
       - "{{ network.ports.mqtt_tcp.expose }}"
       - "{{ network.ports.mqtt_ssl_tcp.expose }}"
@@ -35,6 +52,10 @@
       - "{{ network.ports.websocket_tcp.bind }}"
       - "{{ network.ports.websocket_ssl_tcp.bind }}"
       - "{{ network.ports.webui.bind }}"
+    volumes:
+      - "{{ host.mqtt.volumes.data }}:{{ containers.mqtt.volumes.data }}:Z"
+      - "{{ host.mqtt.volumes.etc }}:{{ containers.mqtt.volumes.etc }}:Z"
+      - "{{ host.mqtt.volumes.log }}:{{ containers.mqtt.volumes.log }}:Z"
     restart_policy: always
 
 - name: "Start Proxy"
@@ -44,6 +65,7 @@
     state: "started"
     env:
       "TZ": "{{ timezone }}"
+      "POCKETBASE_HOST": "http://192.168.1.121:3001"
     expose:
       - "{{ network.ports.proxy.expose }}"
     ports:
