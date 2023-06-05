@@ -1,4 +1,4 @@
-CUPS installation
+# CUPS installation
 
 - sudo dnf install cups
 - sudo yum install splix

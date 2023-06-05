@@ -26,7 +26,7 @@ Install all 3rd party roles this playbook uses.
 ansible-galaxy install -r requirements.yml
 ```
 
-Create an inventory (`inventory.ini`) to define which machines you're targeting. 
+Create an inventory (`inventory.ini`) to define which machines you're targeting.
 
 Execute the following command to deploy `run.yml`.
 
@@ -39,7 +39,7 @@ ansible-playbook run.yml
 Create a new keychain item for vault decryption.
 
 ```bash
-security add-generic-password \                          
+security add-generic-password \
    -a [USER] \
    -s home-server-vault \
    -w
@@ -59,7 +59,7 @@ This Homebridge setup is quite unusual. I've learned a lot from
 this [blog article](https://www.devwithimagination.com/2020/02/02/running-homebridge-on-docker-without-host-network-mode/).
 Run the `generate-services.sh` on the server to generate a avahi service definition for
 everything that runs inside the homebridge container. SELinux will complain about
-avahi trying to access that the generated file. 
+avahi trying to access that the generated file.
 Run the following commands to fix those permissions.
 
 ```bash
