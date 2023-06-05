@@ -6,7 +6,7 @@ container:
     homebridge: "/homebridge"
 host:
   volumes:
-    homebridge: "/home/{{ username }}/homebridge"
+    homebridge: "/home/{{ username }}/External/homebridge"
 network:
   ports:
     homekit_tcp:
